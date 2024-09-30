@@ -7,17 +7,17 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
-- 从多个房产网站抓取房源数据
-- 解析并提取关键信息(如价格、面积、位置等)
-- 将数据保存到数据库中
-- 提供数据分析和可视化功能
+- 🐚 从BeiKe房产网站抓取房源数据
+- 🧰 解析并提取关键信息(如价格、面积、位置等)
+- 📦 将数据保存到数据库中
+- 📊 提供数据分析和可视化功能
 
 ![](resource/pic/header.png)
 
 ## 快速开始
 
 1. 克隆项目到本地
-2. 配置 `static/config.ini` 文件，填入需要爬取的网站、数据库路径、cookie 等信息；
+2. 配置 `static/config.ini` 文件，填入需要爬取的网站、数据库路径、cookie 等信息
 2. 安装依赖: `pip install -r requirements.txt`
 3. 运行爬虫: `python main.py`
 4. 查看结果: `data.db` 文件中
