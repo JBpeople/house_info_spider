@@ -1,6 +1,7 @@
 import re
 from abc import ABC, abstractmethod
 
+from src.err import UrlNotCompleteError
 from src.spider.page_handler import BeiKePageHandler, BeiKePageNumHandler
 from src.spider.webpage import BeikeWebPage
 
@@ -41,11 +42,16 @@ class BeiKeSpider(Spider):
 
         :return: 贝壳网页页数网址
         """
+        # 检查url是否完整
+        if "pg" not in self.url:
+            raise UrlNotCompleteError("url缺少页数标记")
         # 获取网页内容
         webpage = BeikeWebPage(self.url)
         html = webpage.get_html()
+        # 获取网页页数
         page_handler = BeiKePageNumHandler(html)
         page_num = page_handler.get_page_num()
+        # 拼接网页网址
         page_pattern = re.compile(r"pg(\d+)")
         result = []
         for i in range(1, page_num + 1):

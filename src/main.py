@@ -13,6 +13,7 @@ def parse_data(data: dict):
 
     :param data: 数据
     """
+    result = []
     for i in range(len(data["key"])):
         house_info = HouseInfo(
             key=data["key"][i],
@@ -29,7 +30,8 @@ def parse_data(data: dict):
             total_price=data["total_price"][i],
             unit_price=data["unit_price"][i],
         )
-        yield house_info
+        result.append(house_info)
+    return result
 
 
 def pre_process_data():
@@ -39,9 +41,8 @@ def pre_process_data():
     """
     # 将数据库所有数据状态设置为1，表示房屋信息已经下架
     exist_house_infos = query_house_info()
-    if exist_house_infos:
-        for exist_house_info in exist_house_infos:
-            update_house_info(key=exist_house_info.key, status=1)
+    for exist_house_info in exist_house_infos:
+        update_house_info(key=exist_house_info.key, status=1)
 
 
 def process_data(data: dict):
@@ -50,11 +51,12 @@ def process_data(data: dict):
     :param data: 数据
     """
     # 将查询到的数据状态设置为0，表示房屋信息还在出售
-    for house_info in parse_data(data):
+    house_infos = parse_data(data)
+    for house_info in house_infos:
         same_house_infos = query_house_info(key=house_info.key)
         if same_house_infos:
             same_house_info = same_house_infos[0]
-            update_house_info(key=house_info.key, status=0)
+            update_house_info(key=same_house_info.key, status=0)
             if same_house_info.total_price != house_info.total_price:  # 判断价格是否变化
                 total_price_history = eval(same_house_info.history)
                 total_price_history[datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")] = same_house_info.total_price
