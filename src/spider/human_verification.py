@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+import ddddocr
 from DrissionPage import Chromium
 from lxml import etree
 
@@ -41,6 +42,13 @@ class BeiKeHumanVerification(HumanVerification):
         tree = etree.HTML(html)
         total_data = tree.xpath("//h2[@class='total fl']/span/text()")
         if not total_data:  # 如果total_data为空，说明需要人机验证
+            tab.listen.start("data:image/jpeg;base64")
+            tab.ele("@text()=点击验证").click()
+            res = tab.listen.wait()  # 等待并获取一个数据包
+            base64_code = str(res).split(" ")[3]
+            base64_code = base64_code[:-2]
+            code = ddddocr.DdddOcr().classification(base64_code)
+            print(code)
             input("请输入任意键继续获取cookie...")
         new_cookie = serialize_cookie(list(tab.cookies()))
         cookie_path = get_config("cookie", "cookie_path")
