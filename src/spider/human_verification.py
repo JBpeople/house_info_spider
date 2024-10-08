@@ -1,3 +1,4 @@
+import time
 from abc import ABC, abstractmethod
 
 import ddddocr
@@ -86,6 +87,7 @@ class BeiKeHumanVerification(HumanVerification):
                     pic_package = tab.listen.wait()  # 等待并获取一个数据包
                     verification_code = self._get_verification_code(str(pic_package))
                 tab.ele("@class=on").input(verification_code)
+                time.sleep(3)
                 # 保存cookie
                 if not self._check_html(tab.html):
                     self._save_cookie(tab.cookies())

@@ -1,3 +1,4 @@
+import os
 import re
 from typing import List
 
@@ -51,6 +52,9 @@ def get_beike_cookie(to_str: bool = False) -> str | dict:
     :return: cookie字典或者cookie字符串
     """
     cookie_path = get_config("cookie", "cookie_path")
+    if not os.path.exists(cookie_path):
+        with open(cookie_path, "w") as f:
+            f.write("")
     with open(cookie_path, "r") as f:
         cookie_string = f.read().strip()
     if to_str:  # 返回字符串，适配DrissionPage的cookie设置
