@@ -51,7 +51,7 @@ class BeikeWebPage(WebPage):
         cookie = get_beike_cookie()
         response = requests.get(self.url, headers=headers, cookies=cookie)
         if self.check_html(response.text):
-            BeiKeHumanVerification.do_human_verify()
+            BeiKeHumanVerification().do_human_verify()
             cookie = get_beike_cookie()
             response = requests.get(self.url, headers=headers, cookies=cookie)
             if self.check_html(response.text):

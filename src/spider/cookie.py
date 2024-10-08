@@ -48,7 +48,7 @@ def get_beike_cookie(to_str: bool = False) -> str | dict:
     """获取cookie
 
     :param cookie_path: cookie文件路径
-    :return: cookie字典
+    :return: cookie字典或者cookie字符串
     """
     cookie_path = get_config("cookie", "cookie_path")
     with open(cookie_path, "r") as f:

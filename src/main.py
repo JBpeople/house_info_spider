@@ -30,6 +30,7 @@ def parse_data(data: dict):
             upload_time=data["upload_time"][i],
             total_price=data["total_price"][i],
             unit_price=data["unit_price"][i],
+            url=data["url"][i],
         )
         result.append(house_info)
     return result
