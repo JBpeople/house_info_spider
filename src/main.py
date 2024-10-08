@@ -1,5 +1,6 @@
 import concurrent.futures
 import datetime
+import time
 
 from tqdm import tqdm
 
@@ -35,10 +36,7 @@ def parse_data(data: dict):
 
 
 def pre_process_data():
-    """数据预处理
-
-    :param data: 数据
-    """
+    """数据预处理"""
     # 将数据库所有数据状态设置为1，表示房屋信息已经下架
     exist_house_infos = query_house_info()
     for exist_house_info in exist_house_infos:
@@ -71,22 +69,25 @@ def process_data(data: dict):
 
 
 def main():
-    pre_process_data()
+    while True:
+        print(f"开始执行任务，当前时间为：{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        pre_process_data()
 
-    url = get_config("request", "url")
-    spider = BeiKeSpider(url)
-    urls = spider.get_page_url()
-    # 使用50个线程池提交任务
-    with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
-        futures = [executor.submit(spider.get_page_data, url) for url in urls]
-        # 使用tqdm展示爬取进度
-        with tqdm(total=len(futures), desc="爬取进度") as pbar:
-            for future in concurrent.futures.as_completed(futures):
-                data = future.result()
-                process_data(data)
-                pbar.update(1)
+        url = get_config("request", "url")
+        spider = BeiKeSpider(url)
+        urls = spider.get_page_url()
+        # 使用50个线程池提交任务
+        with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
+            futures = [executor.submit(spider.get_page_data, url) for url in urls]
+            # 使用tqdm展示爬取进度
+            with tqdm(total=len(futures), desc="爬取进度") as pbar:
+                for future in concurrent.futures.as_completed(futures):
+                    data = future.result()
+                    process_data(data)
+                    pbar.update(1)
 
-    print("---> 数据爬取完成！")
+        interval = int(get_config("request", "interval"))
+        time.sleep(interval)
 
 
 if __name__ == "__main__":

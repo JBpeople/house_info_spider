@@ -80,7 +80,10 @@ class BeiKePageHandler(PageContentHandler):
             # 解析房屋信息
             total_floor = total_floor_pattern.search(house_info).group(1)  # type: ignore[union-attr]
             at_floor = at_floor_pattern.search(house_info).group(1)  # type: ignore[union-attr]
-            year = year_pattern.search(house_info).group(1)  # type: ignore[union-attr]
+            try:  # 解析房屋年份，年份可能为空
+                year = year_pattern.search(house_info).group(1)  # type: ignore[union-attr]
+            except AttributeError:
+                year = 0
             layout = layout_pattern.search(house_info).group(1)  # type: ignore[union-attr]
             area = area_pattern.search(house_info).group(1)  # type: ignore[union-attr]
             direction = direction_pattern.search(house_info).group(1)  # type: ignore[union-attr]
@@ -140,6 +143,7 @@ class BeiKePageHandler(PageContentHandler):
         result = {}
         for key, value in data.items():
             if key == "key":
+                result["url"] = value
                 value = [i.split("/")[-1] for i in value]
                 value = [int(i.split(".")[0]) for i in value]
                 result[key] = value

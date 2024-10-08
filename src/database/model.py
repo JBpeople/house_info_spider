@@ -54,6 +54,7 @@ class HouseInfo(Base, BaseMixin):  # type: ignore[misc, valid-type]
     unit_price = Column(Float, nullable=False)
     history = Column(String(1024), default="{}")
     status = Column(Integer, default=0)  # 0表示在售，1表示已下架
+    url = Column(String(255), nullable=False)
 
 
 Base.metadata.create_all(engine)
