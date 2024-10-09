@@ -45,6 +45,8 @@ class BeiKeHumanVerification(HumanVerification):
         :param cookie: cookie字符串
         """
         new_cookie = serialize_cookie(list(cookie))
+        if new_cookie.endswith(";"):  # 去掉最后一个分号
+            new_cookie = new_cookie[:-1]
         cookie_path = get_config("cookie", "cookie_path")
         with open(cookie_path, "w", encoding="utf-8") as f:
             f.write(str(new_cookie))

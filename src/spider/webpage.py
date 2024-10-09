@@ -55,6 +55,7 @@ class BeikeWebPage(WebPage):
             cookie = get_beike_cookie()
             response = requests.get(self.url, headers=headers, cookies=cookie)
             if self.check_html(response.text):
+                print(response.text)
                 raise HumanMachineVerificationError("人机验证失败")
             else:
                 return response.text
